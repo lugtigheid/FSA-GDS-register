@@ -81,14 +81,14 @@ p <- p %>% rowwise() %>%
 #-- Need to change city of Lincoln to Lincoln. 
 ###
 
-p <- p %>% mutate(link = ifelse(is.na(link), links, link)
+p <- p %>% mutate(link = ifelse(is.na(link), links, link))
 
 # link in data from wikipedia
 p <- p %>% left_join(data, by=c('name'='Name'))
 
 # forest dean doesn't have their website as first result, so instead
 # we use the link that is in the wikipedia entry (assume it is correct)
-p <- p %>% mutate(link = ifelse(is.na(link), links, link)
+# p <- p %>% mutate(link = ifelse(is.na(link), links, link))
 
 districts <- p %>% filter(`local-authority-type` != 'CTY')
 counties <- p %>% filter(`local-authority-type` == 'CTY')
@@ -106,5 +106,7 @@ all.data <- all.data %>%
   mutate(ts.link = ifelse(`local-authority-type.x` == 'NMD', 
                           `link.y`, `link.x`))
 
-p %>% write_csv('draft-register.csv')
+all.data %>% 
+  select(-`start-date.x`:-links.y ) %>% 
+  write_csv('draft-register.csv')
 
